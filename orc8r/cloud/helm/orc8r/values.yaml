@@ -16,7 +16,7 @@ nms:
     create: true
     image:
       repository: linuxfoundation.jfrog.io/magma-docker-test/magmalte
-      tag: 1.9.0
+      tag: v1.9
   nginx:
     create: true
   certs:
@@ -108,7 +108,7 @@ nginx:
   # nginx image
   image:
     repository: linuxfoundation.jfrog.io/magma-docker-test/nginx
-    tag: 1.9.0
+    tag: v1.9
     pullPolicy: IfNotPresent
 
   # Settings affecting nginx application
@@ -154,7 +154,7 @@ controller:
   # orc8r_base image
   image:
     repository: linuxfoundation.jfrog.io/magma-docker-test/controller
-    tag: 1.9.0
+    tag: v1.9
     pullPolicy: IfNotPresent
     env:
       orc8r_domain_name: magma.test

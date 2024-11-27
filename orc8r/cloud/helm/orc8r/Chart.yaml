@@ -10,13 +10,13 @@
 # limitations under the License.
 
 apiVersion: v2
-appVersion: "1.8.0"
+appVersion: "1.9.0"
 description: Helm chart for the Magma Orchestrator
 name: orc8r
-version: 1.8.0
-home: https://www.magmacore.org
+version: 1.9.0
+home: https://linuxfoundation.jfrog.io/magma-docker-test
 sources:
-  - https://github.com/magma/magma
+  - https://jblakley.github.io/magma-charts/
 keywords:
   - magma
   - orc8r
