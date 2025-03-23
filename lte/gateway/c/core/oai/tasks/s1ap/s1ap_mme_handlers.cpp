@@ -127,10 +127,9 @@ status_code_e s1ap_generate_s1_setup_response(
 bool is_all_erabId_same(S1ap_PathSwitchRequest_t* container);
 static int handle_ue_context_rel_timer_expiry(zloop_t* loop, int id, void* arg);
 
-static bool s1ap_send_enb_deregistered_ind(__attribute__((unused))
-                                           uint32_t keyP,
-                                           uint64_t const dataP, void* argP,
-                                           void** resultP);
+static bool s1ap_send_enb_deregistered_ind(
+    __attribute__((unused)) uint32_t keyP, uint64_t const dataP, void* argP,
+    void** resultP);
 /* Handlers matrix. Only mme related procedures present here.
  */
 s1ap_message_handler_t message_handlers[][3] = {
@@ -3595,10 +3594,9 @@ status_code_e s1ap_mme_handle_path_switch_request(
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-static bool s1ap_send_enb_deregistered_ind(__attribute__((unused))
-                                           uint32_t keyP,
-                                           uint64_t const dataP, void* argP,
-                                           void** resultP) {
+static bool s1ap_send_enb_deregistered_ind(
+    __attribute__((unused)) uint32_t keyP, uint64_t const dataP, void* argP,
+    void** resultP) {
   arg_s1ap_send_enb_dereg_ind_t* arg = (arg_s1ap_send_enb_dereg_ind_t*)argP;
   oai::UeDescription* ue_ref_p = nullptr;
 
@@ -4669,11 +4667,19 @@ status_code_e s1ap_mme_handle_erab_modification_indication(
   S1AP_FIND_PROTOCOLIE_BY_ID(S1ap_E_RABModificationIndicationIEs_t, ie,
                              container, S1ap_ProtocolIE_ID_id_MME_UE_S1AP_ID,
                              true);
+  if (!ie) {
+    OAILOG_ERROR(LOG_S1AP, "MME_UE_S1AP_ID Type S1AP ProtocolIE ID Missing\n");
+    OAILOG_FUNC_RETURN(LOG_S1AP, RETURNerror);
+  }
   mme_ue_s1ap_id = ie->value.choice.MME_UE_S1AP_ID;
 
   S1AP_FIND_PROTOCOLIE_BY_ID(S1ap_E_RABModificationIndicationIEs_t, ie,
                              container, S1ap_ProtocolIE_ID_id_eNB_UE_S1AP_ID,
                              true);
+  if (!ie) {
+    OAILOG_ERROR(LOG_S1AP, "eNB_UE_S1AP_ID Type S1AP ProtocolIE ID Missing\n");
+    OAILOG_FUNC_RETURN(LOG_S1AP, RETURNerror);
+  }
   // eNB UE S1AP ID is limited to 24 bits
   enb_ue_s1ap_id =
       (enb_ue_s1ap_id_t)(ie->value.choice.ENB_UE_S1AP_ID & ENB_UE_S1AP_ID_MASK);
@@ -5292,6 +5298,10 @@ status_code_e s1ap_mme_handle_erab_rel_response(oai::S1apState* state,
 
   S1AP_FIND_PROTOCOLIE_BY_ID(S1ap_E_RABReleaseResponseIEs_t, ie, container,
                              S1ap_ProtocolIE_ID_id_MME_UE_S1AP_ID, true);
+  if (!ie) {
+    OAILOG_ERROR(LOG_S1AP, "Missing MME_UE_S1AP_ID IE\n");
+    OAILOG_FUNC_RETURN(LOG_S1AP, RETURNerror);
+  }
   mme_ue_s1ap_id = ie->value.choice.MME_UE_S1AP_ID;
 
   if ((ie) && (ue_ref_p = s1ap_state_get_ue_mmeid((uint32_t)mme_ue_s1ap_id)) ==
@@ -5305,6 +5315,10 @@ status_code_e s1ap_mme_handle_erab_rel_response(oai::S1apState* state,
 
   S1AP_FIND_PROTOCOLIE_BY_ID(S1ap_E_RABReleaseResponseIEs_t, ie, container,
                              S1ap_ProtocolIE_ID_id_eNB_UE_S1AP_ID, true);
+  if (!ie) {
+    OAILOG_ERROR(LOG_S1AP, "Missing eNB_UE_S1AP_ID IE\n");
+    OAILOG_FUNC_RETURN(LOG_S1AP, RETURNerror);
+  }
   // eNB UE S1AP ID is limited to 24 bits
   enb_ue_s1ap_id =
       (enb_ue_s1ap_id_t)(ie->value.choice.ENB_UE_S1AP_ID & ENB_UE_S1AP_ID_MASK);
